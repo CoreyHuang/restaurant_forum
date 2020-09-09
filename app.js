@@ -7,7 +7,7 @@ const flash = require('connect-flash')
 const session = require('express-session')
 const PORT = 3000
 const passport = require('./config/passport')
-console.log("passport check")
+// console.log("passport check")
 
 app.engine('hbs', exphbs({defaultLayout: "main", extname: "hbs"}))
 app.set('view engine', 'hbs')
@@ -21,7 +21,7 @@ app.use((req, res, next) => {
   res.locals.success_messages = req.flash('success_messages')
   res.locals.error_messages = req.flash('error_messages')
   res.locals.user = req.user 
-  console.log("res.session", req.session)
+  // console.log("res.session", req.session)
   next()
 })
 
