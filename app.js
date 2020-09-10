@@ -5,7 +5,7 @@ const db = require('./models')
 const bodyParser = require('body-parser')
 const flash = require('connect-flash')
 const session = require('express-session')
-const PORT = 3000
+const PORT = process.env.PORT || 3000
 const passport = require('./config/passport')
 const methodOverride = require('method-override')
 // console.log("passport check")
