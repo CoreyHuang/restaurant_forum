@@ -7,10 +7,12 @@ const flash = require('connect-flash')
 const session = require('express-session')
 const PORT = 3000
 const passport = require('./config/passport')
+const methodOverride = require('method-override')
 // console.log("passport check")
 
 app.engine('hbs', exphbs({defaultLayout: "main", extname: "hbs"}))
 app.set('view engine', 'hbs')
+app.use(methodOverride('_method'))
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(session({ secret: 'secret', resave: false, saveUninitialized: false }))
 app.use(flash())
