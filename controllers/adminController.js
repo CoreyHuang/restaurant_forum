@@ -1,5 +1,6 @@
 const db = require('../models')
 const Restaurant = db.Restaurant
+const User = db.User
 const fs = require('fs')
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
@@ -27,17 +28,17 @@ const adminController = {
       imgur.setClientID(IMGUR_CLIENT_ID);
       imgur.upload(file.path, (err, img) => {
         if (err) console.log('Error: ', err)
-          return Restaurant.create({
-            name: req.body.name,
-            tel: req.body.tel,
-            address: req.body.address,
-            opening_hours: req.body.opening_hours,
-            description: req.body.description,
-            image: file ? img.data.link : null
-          }).then((restaurant) => {
-            req.flash('success_messages', 'restaurant was successfully created')
-            return res.redirect('/admin/restaurants')
-          })   
+        return Restaurant.create({
+          name: req.body.name,
+          tel: req.body.tel,
+          address: req.body.address,
+          opening_hours: req.body.opening_hours,
+          description: req.body.description,
+          image: file ? img.data.link : null
+        }).then((restaurant) => {
+          req.flash('success_messages', 'restaurant was successfully created')
+          return res.redirect('/admin/restaurants')
+        })
       })
     } else {
       return Restaurant.create({
@@ -82,20 +83,20 @@ const adminController = {
       imgur.setClientID(IMGUR_CLIENT_ID);
       imgur.upload(file.path, (err, img) => {
         if (err) console.log('Error: ', err)
-          return Restaurant.findByPk(req.params.id)
-            .then((restaurant) => {
-              restaurant.update({
-                name: req.body.name,
-                tel: req.body.tel,
-                address: req.body.address,
-                opening_hours: req.body.opening_hours,
-                description: req.body.description,
-                image: file ? img.data.link : restaurant.image
-              }).then((restaurant) => {
-                req.flash('success_messages', 'restaurant was successfully to update')
-                res.redirect('/admin/restaurants')
-              })
+        return Restaurant.findByPk(req.params.id)
+          .then((restaurant) => {
+            restaurant.update({
+              name: req.body.name,
+              tel: req.body.tel,
+              address: req.body.address,
+              opening_hours: req.body.opening_hours,
+              description: req.body.description,
+              image: file ? img.data.link : restaurant.image
+            }).then((restaurant) => {
+              req.flash('success_messages', 'restaurant was successfully to update')
+              res.redirect('/admin/restaurants')
             })
+          })
       })
     } else {
       return Restaurant.findByPk(req.params.id)
@@ -114,8 +115,6 @@ const adminController = {
             })
         })
     }
-
- 
   },
 
   deleteRestaurant: (req, res) => {
@@ -126,7 +125,29 @@ const adminController = {
             res.redirect('/admin/restaurants')
           })
       })
-  }
+  },
+
+  getUsers: (req, res) => {
+    return User.findAll({ raw: true })
+      .then(users => {
+        return res.render('admin/users', { users })
+      })
+      .catch(err => console.log(err))
+  },
+
+  putUsers: (req, res) => {
+    return User.findByPk(req.params.id)
+      .then(user => {
+        const isAdmin = !user.isAdmin  
+        user.update({ isAdmin })
+          .then(() => {
+            req.flash('success_messages','User authority was successfully to update')
+            return res.redirect('back')
+          } )
+          .catch(err => console.log(err))
+      })
+      .catch(err => console.log(err))
+  },
 }
 
 module.exports = adminController
