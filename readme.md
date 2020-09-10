@@ -3,7 +3,7 @@
 
 ---
 ![image](https://github.com/CoreyHuang/restaurant_forum/blob/master/restaurant_page.png)
-![image](https://github.com/CoreyHuang/restaurant_forum/blob/master/user.png)
+![image](https://github.com/CoreyHuang/restaurant_forum/blob/master/user_page.png)
 
 ### installation and execution(安裝與執行步驟):
 #### `<安裝步驟>`
