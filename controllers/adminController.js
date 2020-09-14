@@ -1,6 +1,7 @@
 const db = require('../models')
 const Restaurant = db.Restaurant
 const User = db.User
+const Category = db.Category
 const fs = require('fs')
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
@@ -9,9 +10,11 @@ const adminController = {
 
   getRestaurants: (req, res) => {
     // console.log("category.Restaurants",category.Restaurants)
-    return Restaurant.findAll({ raw: true }).then(restaurants => {
-      return res.render('admin/restaurants', { restaurants: restaurants })
-    })
+    return Restaurant.findAll({ raw: true, nest: true, include: [Category] })
+      .then(restaurants => {
+        // console.log("restaurants", restaurants)
+        return res.render('admin/restaurants', { restaurants: restaurants })
+      })
   },
 
   createRestaurant: (req, res) => {
@@ -60,7 +63,7 @@ const adminController = {
   },
 
   getRestaurant: (req, res) => {
-    return Restaurant.findByPk(req.params.id, { raw: true }).then(restaurant => {
+    return Restaurant.findByPk(req.params.id, { raw: true, nest: true, include: [Category] }).then(restaurant => {
       return res.render('admin/restaurant', {
         restaurant: restaurant
       })
@@ -139,12 +142,12 @@ const adminController = {
   putUsers: (req, res) => {
     return User.findByPk(req.params.id)
       .then(user => {
-        const isAdmin = !user.isAdmin  
+        const isAdmin = !user.isAdmin
         user.update({ isAdmin })
           .then(() => {
-            req.flash('success_messages','User authority was successfully to update')
+            req.flash('success_messages', 'User authority was successfully to update')
             return res.redirect('back')
-          } )
+          })
           .catch(err => console.log(err))
       })
       .catch(err => console.log(err))
