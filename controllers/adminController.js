@@ -8,6 +8,7 @@ const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 const adminController = {
 
   getRestaurants: (req, res) => {
+    // console.log("category.Restaurants",category.Restaurants)
     return Restaurant.findAll({ raw: true }).then(restaurants => {
       return res.render('admin/restaurants', { restaurants: restaurants })
     })
