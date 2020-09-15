@@ -1,0 +1,16 @@
+<div class="card mb-3" style="">
+  <div class="row no-gutters">
+    <div class="col-md-4">
+      <img src={{userByFind.image}} class="card-img" alt="...">
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h2 class="card-title">{{userByFind.name}}</h5>
+        <p class="card-text">{{userByFind.email}}</h3>
+        {{#ifCond user.id userByFind.id}}
+        <p><a href="/users/{{../userByFind.id}}/edit" class="btn btn-primary">Edit</a></p>
+        {{/ifCond}}
+      </div>
+    </div>
+  </div>
+</div>
