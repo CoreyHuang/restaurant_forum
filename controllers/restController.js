@@ -109,7 +109,9 @@ let restController = {
     // Restaurant.findByPk(req.params.id, {  => 使用model answer只會撈出一筆!?
     //   include: [Category, { model: Comment, include: [User] }], raw: true, nest: true,})  
     .then((restaurant) => {
-      res.render('restDashboard', { restaurant: restaurant.rows[0], restComment: restaurant.count })
+      let restComment = restaurant.count
+      if (!restaurant.rows[0].Comments.id && restComment === 1) restComment = 0
+      res.render('restDashboard', { restaurant: restaurant.rows[0], restComment })
       })
 
   }
