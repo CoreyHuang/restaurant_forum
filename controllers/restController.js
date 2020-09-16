@@ -38,7 +38,7 @@ let restController = {
         Category.findAll({
           raw: true,
           nest: true
-        }).then(categories => {  
+        }).then(categories => {
           // console.log('page', page)
           // console.log('totalPage',typeof totalPage[0])
           // console.log('totalPage', totalPage)
@@ -64,7 +64,7 @@ let restController = {
   getRestaurant: (req, res) => {
     return Restaurant.findByPk(req.params.id, {
       // include: Category
-       include: [
+      include: [
         Category,
         { model: Comment, include: [User] }
       ]
@@ -99,6 +99,16 @@ let restController = {
         })
       })
     })
+  },
+
+  getDashboard: (req, res) => {
+    Restaurant.findAndCountAll({ raw: true, nest: true, include: [Comment,Category], where: { id: req.params.id } })
+    // Restaurant.findByPk(req.params.id, {  => 使用model answer只會撈出一筆!?
+    //   include: [Category, { model: Comment, include: [User] }], raw: true, nest: true,})  
+    .then((restaurant) => {
+      res.render('restDashboard', { restaurant: restaurant.rows[0], restComment: restaurant.count })
+      })
+
   }
 }
 module.exports = restController
