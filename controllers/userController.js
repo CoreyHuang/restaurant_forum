@@ -54,23 +54,15 @@ const userController = {
   },
 
   getUser: (req, res) => {
-    User.findAll({
-      where: { id: req.params.id }, raw: true, nest: true, include: { model: Comment, include: Restaurant }
-    })
+    User.findByPk(req.params.id, { include: { model: Comment, include: Restaurant }})
       .then(user => {
-        const checkRestId = []
         const comments = []
-        user.forEach(data => {
-          let count = 0
-          for (let i = 0; i < checkRestId.length; i++) {
-            if (checkRestId[i] === data.Comments.RestaurantId)
-              count ++
-          }
-          checkRestId.push(data.Comments.RestaurantId)
-          if (count === 0 && data.Comments.text)
-            comments.push(data.Comments)
+        const userJSON = user.toJSON()
+        userJSON.Comments.forEach(comment => {
+          if (!comments.map(index => index.RestaurantId).includes(comment.RestaurantId) ) 
+            comments.push(comment)        
         })
-        res.render('userProfile', { userByFind: user[0], comments, commentCount: comments.length })
+        res.render('userProfile', { userByFind: userJSON, comments, commentCount: comments.length })
       })
   },
 
