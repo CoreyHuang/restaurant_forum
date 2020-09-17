@@ -34,12 +34,20 @@
         </p>
         <span class="badge badge-secondary">{{this.categoryName}}</span>
         <p class="card-text">{{this.description}}</p>
-      {{#if this.isFavorited }}
-        <form action="/favorite/{{this.id}}?_method=DELETE" method="POST"><button type="submit"
-            class="btn btn-danger">移除最愛</button></form>
-      {{else}}
-        <form action="/favorite/{{this.id}}" method="POST"><button type="submit" class="btn btn-primary">加到最愛</button></form>
-      {{/if}}
+        {{#if this.isFavorited }}
+          <form action="/favorite/{{this.id}}?_method=DELETE" method="POST" style="display: inline;"><button type="submit"
+              class="btn btn-danger">移除最愛</button></form>
+        {{else}}
+          <form action="/favorite/{{this.id}}" method="POST" style="display: inline;"><button type="submit" class="btn btn-primary">加到最愛</button>
+          </form>
+        {{/if}}
+        {{#if this.isLiked}}
+          <form action="/like/{{this.id}}?_method=DELETE" method="POST" style="display: inline;"><button type="submit"
+              class="btn btn-danger">Unlike</button></form>
+        {{else}}
+          <form action="/like/{{this.id}}" method="POST" style="display: inline;"><button type="submit" class="btn btn-primary" >Like</button>
+          </form>
+        {{/if}}
       </div>
     </div>
   </div>
@@ -56,13 +64,13 @@
       </a>
     </li>
     <li>
-    {{#each totalPage}}
+      {{#each totalPage as |item|}}
       {{#ifCond this ../page}}
-      <li class="page-item active"><a class="page-link" href="#">{{../this}}</a></li>
-      {{else}}
-      <li class="page-item"><a class="page-link"
-          href="/restaurants?page={{../this}}&categoryId={{../../categoryId}}">{{../this}}</a></li>
-      {{/ifCond}}
+    <li class="page-item active"><a class="page-link" href="#">{{item}}</a></li>
+    {{else}}
+    <li class="page-item"><a class="page-link"
+        href="/restaurants?page={{item}}&categoryId={{../../categoryId}}">{{item}}</a></li>
+    {{/ifCond}}
     {{/each}}
     <a class="page-link" href="/restaurants?page={{next}}&categoryId={{categoryId}}" aria-label="Next">
       <span aria-hidden="true">&raquo;</span>

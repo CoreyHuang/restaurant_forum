@@ -4,6 +4,7 @@ const User = db.User
 const Comment = db.Comment
 const Restaurant = db.Restaurant
 const Favorite = db.Favorite
+const Like = db.Like
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 
@@ -60,14 +61,14 @@ const userController = {
         const checkRestId = []
         const comments = []
         user.forEach(data => {
-          let count = 0        
+          let count = 0
           for (let i = 0; i < checkRestId.length; i++) {
-            if (checkRestId[i] === data.Comments.RestaurantId) 
-               count ++     
+            if (checkRestId[i] === data.Comments.RestaurantId)
+              count ++
           }
           checkRestId.push(data.Comments.RestaurantId)
           if (count === 0 && data.Comments.text)
-             comments.push(data.Comments)
+            comments.push(data.Comments)
         })
         res.render('userProfile', { userByFind: user[0], comments, commentCount: comments.length })
       })
@@ -137,6 +138,26 @@ const userController = {
             return res.redirect('back')
           })
       })
+  },
+
+  addLike: (req, res) => {
+    return Like.create({
+      UserId: req.user.id,
+      RestaurantId: req.params.restaurantId
+    })
+      .then(() => res.redirect('back'))
+  },
+
+  removeLike: (req, res) => {
+    return Like.findOne({
+      where: {
+        UserId: req.user.id,
+        RestaurantId: req.params.restaurantId}
+    })
+    .then(like => {
+      like.destroy()
+        .then(() => res.redirect('back'))
+    })
   },
 }
 
