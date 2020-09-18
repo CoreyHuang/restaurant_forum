@@ -8,6 +8,9 @@
         <h2 class="card-title">{{userByFind.name}}</h5>
           <p class="card-text">{{userByFind.email}}</p>
           <p class="card-text">{{commentCount}} 已評論餐廳</p>
+          <p class="card-text">{{FavoriteCount}} 收藏的餐廳</p>
+          <p class="card-text">{{FollowingCount}} followings (追蹤者)</p>
+          <p class="card-text">{{FollowerCount}} followers (追隨者)</p>
             {{#ifCond user.id userByFind.id}}
           <p><a href="/users/{{../userByFind.id}}/edit" class="btn btn-primary">Edit</a></p>
           {{/ifCond}}
@@ -15,16 +18,66 @@
     </div>
   </div>
 </div>
-
+{{#if commentCount}}
 <div class="row mx-0">
-  <h4 class="col-12 mt-4 p-3" style="background: #ddd;border:solid 1px black;">{{commentCount}} 已評論餐廳</h4>
-  <div class="row mx-0 col-12 p-0" style="border:solid 1px black;">
+  <h5 class="col-12 mt-4 p-3 mb-0 rounded" style="background: rgba(0,0,0,.03);border:solid 1px gray;">{{commentCount}} 已評論餐廳</h4>
+  <div class="row mx-0 col-12 p-0 rounded" style="border:solid 1px gray;">
     {{#each comments}}
     <div class="col-2 p-3" >
       <p>{{this.Restaurant.name}}</p>
       <a href="/restaurants/{{this.RestaurantId}}" class=""><img src="{{this.Restaurant.image}}"
-          class="card-img-top " alt="..." style=""></a>
+          class="card-img-top " alt="..." style="height:130px;width:130px;"></a>
     </div>
     {{/each}}
     </div>
 </div>
+{{/if}}
+
+{{#if FavoriteCount}}
+<div class="row mx-0">
+  <h5 class="col-12 mt-4 p-3 mb-0 rounded" style="background: rgba(0,0,0,.03);border:solid 1px gray;">{{FavoriteCount}} 收藏的餐廳
+    </h4>
+    <div class="row mx-0 col-12 p-0 rounded" style="border:solid 1px gray;">
+      {{#each userByFind.FavoritedRestaurants}}
+      <div class="col-2 p-3">
+        <p>{{this.name}}</p>
+        <a href="/restaurants/{{this.id}}" class=""><img src="{{this.image}}" class="card-img-top "
+            alt="..." style="height:130px;width:130px;"></a>
+      </div>
+      {{/each}}
+    </div>
+</div>
+{{/if}}
+
+{{#if FollowingCount}}
+<div class="row mx-0">
+  <h5 class="col-12 mt-4 p-3 mb-0 rounded" style="background: rgba(0,0,0,.03);border:solid 1px gray;">{{FollowingCount}} followings (追蹤者)
+    </h4>
+    <div class="row mx-0 col-12 p-0 rounded" style="border:solid 1px gray;">
+      {{#each userByFind.Followings}}
+      <div class="col-2 p-3">
+        <p>{{this.name}}</p>
+        <a href="/users/{{this.id}}" class=""><img src="{{this.image}}" class="card-img-top " alt="..."
+            style="height:130px;width:130px;"></a>
+      </div>
+      {{/each}}
+    </div>
+</div>
+{{/if}}
+
+{{#if FollowerCount}}
+<div class="row mx-0">
+  <h5 class="col-12 mt-4 p-3 mb-0 rounded" style="background: rgba(0,0,0,.03);border:solid 1px gray;">{{FollowerCount}}
+    followers (追隨者)
+    </h4>
+    <div class="row mx-0 col-12 p-0 rounded" style="border:solid 1px gray;">
+      {{#each userByFind.Followers}}
+      <div class="col-2 p-3">
+        <p>{{this.name}}</p>
+        <a href="/users/{{this.id}}" class=""><img src="{{this.image}}" class="card-img-top " alt="..."
+            style="height:130px;width:130px;"></a>
+      </div>
+      {{/each}}
+    </div>
+</div>
+{{/if}}
