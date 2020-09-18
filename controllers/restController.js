@@ -30,7 +30,7 @@ let restController = {
         // console.log('result - 2', result.rows[0].dataValues.Category)
         // console.log('result - 3', result.rows[0].dataValues.Category.dataValues.name)
         // console.log('result - 4', result.rows[0].dataValues.Category.name)
-        
+
         console.log('req.user', req.user)
         // console.log('FavoritedRestaurants', req.user.FavoritedRestaurants.map(d => d.id))
         const data = result.rows.map(r => ({
@@ -117,15 +117,32 @@ let restController = {
   },
 
   getDashboard: (req, res) => {
-    Restaurant.findAndCountAll({ raw: true, nest: true, include: [Comment,Category], where: { id: req.params.id } })
-    // Restaurant.findByPk(req.params.id, {  => 使用model answer只會撈出一筆!?
-    //   include: [Category, { model: Comment, include: [User] }], raw: true, nest: true,})  
-    .then((restaurant) => {
-      let restComment = restaurant.count
-      if (!restaurant.rows[0].Comments.id && restComment === 1) restComment = 0
-      res.render('restDashboard', { restaurant: restaurant.rows[0], restComment })
+    Restaurant.findAndCountAll({ raw: true, nest: true, include: [Comment, Category], where: { id: req.params.id } })
+      // Restaurant.findByPk(req.params.id, {  => 使用model answer只會撈出一筆!?
+      //   include: [Category, { model: Comment, include: [User] }], raw: true, nest: true,})  
+      .then((restaurant) => {
+        let restComment = restaurant.count
+        if (!restaurant.rows[0].Comments.id && restComment === 1) restComment = 0
+        res.render('restDashboard', { restaurant: restaurant.rows[0], restComment })
       })
 
-  }
+  },
+
+  getTopRestaurants: (req, res) => {
+    Restaurant.findAll({
+      include: { model: User, as: 'FavoritedUsers' },
+    })
+      .then(restaurants => {
+        let data = restaurants.map(restaurant => ({
+          ...restaurant.dataValues,
+          countFavorited: restaurant.dataValues.FavoritedUsers.length,
+          isFavorited: restaurant.dataValues.FavoritedUsers.map(r => r.dataValues.id).includes(req.user.id)
+        }))
+        data = data.sort((a, b) => b.countFavorited - a.countFavorited).filter((_, index) => index < 10)
+        res.render('topRestaurant', { restaurants: data })
+      })
+  },
+
+
 }
 module.exports = restController
