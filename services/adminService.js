@@ -12,16 +12,22 @@ const adminService = {
 
     return Restaurant.findAll({ raw: true, nest: true, include: [Category] })
       .then(restaurants => {
-        return callback({restaurants})
+        return callback({ restaurants })
       })
   },
 
   getRestaurant: (req, res, callback) => {
     return Restaurant.findByPk(req.params.id, { raw: true, nest: true, include: [Category] }).then(restaurant => {
-      return callback({restaurant})
+      return callback({ restaurant })
     })
   },
 
+  getCategories: (req, res, callback) => {
+    return Category.findAll({ raw: true, nest: true })
+      .then(categories => {
+        return callback({ categories })
+      })
+  },
 
 
 }
