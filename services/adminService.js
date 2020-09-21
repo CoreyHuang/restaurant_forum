@@ -16,6 +16,12 @@ const adminService = {
       })
   },
 
+  getRestaurant: (req, res, callback) => {
+    return Restaurant.findByPk(req.params.id, { raw: true, nest: true, include: [Category] }).then(restaurant => {
+      return callback({restaurant})
+    })
+  },
+
 
 
 }
