@@ -39,6 +39,45 @@ const adminService = {
       })
   },
 
+  postRestaurant: (req, res, callback) => {
+    if (!req.body.name) {
+      return callback({ status: 'error', message: "name didn't exist" })
+    }
+    const { file } = req
+    console.log("req.file", req.file)
+    if (file) {
+      imgur.setClientID(IMGUR_CLIENT_ID);
+      imgur.upload(file.path, (err, img) => {
+        if (err) console.log('Error: ', err)
+        return Restaurant.create({
+          name: req.body.name,
+          tel: req.body.tel,
+          address: req.body.address,
+          opening_hours: req.body.opening_hours,
+          description: req.body.description,
+          image: err ? null : img.data.link,
+          CategoryId: req.body.categoryId
+        }).then((restaurant) => {
+          return callback({ status: 'success', message: "restaurant was successfully created" })
+        })
+      })
+    } else {
+      return Restaurant.create({
+        name: req.body.name,
+        tel: req.body.tel,
+        address: req.body.address,
+        opening_hours: req.body.opening_hours,
+        description: req.body.description,
+        image: null,
+        CategoryId: req.body.categoryId
+      })
+        .then((restaurant) => {
+          return callback({ status: 'success', message: "restaurant was successfully created" })
+        })
+    }
+  },
+
+
 }
 
 module.exports = adminService
